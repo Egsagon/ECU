@@ -1,4 +1,3 @@
-import sys
 import time
 import enum
 import typing
@@ -18,7 +17,7 @@ def spin(
     message: str,
     spinner: Spinner | str = Spinner.BRAILLE,
     delay: float = 0.2,
-    color: int = 36,
+    color: int | str = 36,
 ) -> typing.Generator[None, None, None]:
     '''
     A context manager for displaying a long task.

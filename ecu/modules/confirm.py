@@ -8,7 +8,7 @@ def confirm(
     refute: str = 'No',
     default: bool = True,
     throw: bool = True,
-    hover: int = 106
+    hover: int | str = 106
 ) -> bool:
     '''
     A prompt for confirming an option.

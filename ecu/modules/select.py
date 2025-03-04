@@ -8,7 +8,7 @@ def select(
     choices: typing.Iterable,
     max: int | None = 1,
     size: int | None = None,
-    hover: int = 36
+    hover: int | str = 36
 ) -> list | typing.Any:
     '''
     A prompt for selecting item(s) in a list.
