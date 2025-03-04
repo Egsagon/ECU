@@ -1,5 +1,7 @@
 '''
     ECU library.
+
+    https://github.com/egsagon/ecu
 '''
 
 from .modules.spin import spin

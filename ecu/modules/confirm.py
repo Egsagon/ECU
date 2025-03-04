@@ -1,13 +1,13 @@
 import readchar
 from .. import utils
 
-@utils.hide_cursor()
+@utils.ensure('?25h', '0m')
 def confirm(
     prompt: str,
     confirm: str = 'Yes',
     refute: str = 'No',
     default: bool = True,
-    throw: bool = False,
+    throw: bool = True,
     hover: int = 106
 ) -> bool:
     '''
@@ -27,7 +27,7 @@ def confirm(
     while 1:
         style.sort(reverse = result)
         print(
-            f'\x1b[0m{prompt} '
+            f'\x1b[?25l\x1b[0m{prompt} '
             f'\x1b[{style[0]}m {confirm} '
             f'\x1b[0m\x1b[{style[1]}m {refute} \x1b[0m',
             end = '\r'
@@ -41,7 +41,7 @@ def confirm(
     
     print()
     if throw and not result:
-        pass # TODO raise
+        raise InterruptedError('Confirmation failed')
     
     return result
 

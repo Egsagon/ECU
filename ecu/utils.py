@@ -1,15 +1,25 @@
+import typing
 import contextlib
 
-@contextlib.contextmanager
-def hide_cursor() -> object:
+def ensure(*codes: str) -> typing.ContextManager:
     '''
-    Hide cursor while a function is running.
+    Ensures to cleanup after a function exit.
     '''
 
-    try:
-        yield print('\x1b[?25l', end = '')
+    cleanup = ''.join('\x1b[' + code for code in codes)
+
+    def decorator(func: typing.Callable):
+        def wrapper(*args, **kwargs):
+            try:
+                print('\x1b7', end = '')
+                return func(*args, **kwargs)
+            
+            finally:
+                # Cleanup
+                print('\x1b8\x1b[J' + cleanup, end = '')
+        
+        return wrapper
     
-    finally:
-        print('\x1b[?25h', end = '')
+    return decorator
 
 # EOF

@@ -4,6 +4,7 @@ import enum
 import typing
 import threading
 import contextlib
+from .. import utils
 
 class Spinner(enum.Enum):
     ASCII = '|/-\\'
@@ -12,6 +13,7 @@ class Spinner(enum.Enum):
     SCROLL = ('.  ','.. ','...',' ..','  .','   ')
 
 @contextlib.contextmanager
+@utils.ensure('?25h', '0m')
 def spin(
     message: str,
     spinner: Spinner | str = Spinner.BRAILLE,

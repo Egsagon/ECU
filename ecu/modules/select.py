@@ -2,7 +2,7 @@ import typing
 import readchar
 from .. import utils
 
-@utils.hide_cursor()
+@utils.ensure('?25h', '0m')
 def select(
     prompt: str,
     choices: typing.Iterable,
@@ -28,15 +28,14 @@ def select(
     choices = list(choices) # Convenient for passing iterator directly
     size = size or len(choices)
 
-    def display() -> None:
+    print(prompt)
+    
+    while 1:
         for choice_index, choice in enumerate(choices[scroll:scroll + size]):
             i = scroll + choice_index
-            print(f'\x1b[0m\x1b[2K{"-+"[i in sel]}\x1b[{hover if i == row else 0}m {choice}\x1b[0m')
-    
-    print(prompt)
-    display()
-
-    while 1:
+            print(f'\x1b[?25l\x1b[0m\x1b[2K{"-+"[i in sel]}\x1b[{hover if i == row else 0}m {choice}\x1b[0m')
+        
+        print(f'\x1b[{size}A', end = '')
         key = readchar.readkey()
 
         # Move cursor up
@@ -61,9 +60,6 @@ def select(
         if key == readchar.key.ENTER:
             if max == 1: sel = [row]
             break
-
-        print(f'\x1b[{size}A', end = '')
-        display()
     
     sel.sort()
     result = [choices[i] for i in sel]
