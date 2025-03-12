@@ -53,7 +53,7 @@ def select(
             if row in sel:
                 sel.remove(row)
             
-            elif len(sel) < max or not max:
+            elif not max or len(sel) < max:
                 sel.append(row)
         
         # Confirm or direct select
