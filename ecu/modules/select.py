@@ -58,7 +58,7 @@ def select(
         
         # Confirm or direct select
         if key == readchar.key.ENTER:
-            if max == 1: sel = [row]
+            if not sel: sel = [row]
             break
     
     sel.sort()
