@@ -1,6 +1,6 @@
 [project]
 name = "ecu"
-version = "0.2.2"
+version = "0.3"
 description = "Yet another CLI helper lib"
 authors = [{name = "Egsagon", email = "egsagon12@gmail.com"}]
 license = {file = "LICENSE"}

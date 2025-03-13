@@ -15,7 +15,8 @@ class Spinner(enum.Enum):
 @utils.ensure('?25h', '0m')
 def spin(
     message: str,
-    spinner: Spinner | str = Spinner.BRAILLE,
+    spinner: typing.Literal['ASCII', 'BRAILLE', 'DOTS', 'SCROLL'] | str = 'BRAILLE',
+    end_message: str = '',
     delay: float = 0.2,
     color: int | str = 36,
 ) -> typing.Generator[None, None, None]:
@@ -28,9 +29,9 @@ def spin(
     :param color: Spinner color.
     '''
 
-    if isinstance(spinner, Spinner):
-        spinner = spinner.value
-
+    if spinner in Spinner.__members__:
+        spinner = Spinner[spinner].value
+    
     stop = threading.Event()
 
     def _run() -> None:
@@ -39,10 +40,11 @@ def spin(
             print(f'\x1b[?25l\x1b[2K\x1b[0m{message} \x1b[{color}m{spinner[i % len(spinner)]}\x1b[0m', end = '\r')
             i += 1
             time.sleep(delay)
-        
-        print('\x1b[?25h')
+
+        # Cleanup
+        print(f'\x1b[?25l\x1b[2K\x1b[0m{message} \x1b[{color}m{end_message}\x1b[0m')
     
-    thread = threading.Thread(target=_run, daemon=True)
+    thread = threading.Thread(target = _run, daemon = True)
     thread.start()
 
     try:

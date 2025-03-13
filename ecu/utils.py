@@ -1,5 +1,4 @@
 import typing
-import contextlib
 
 def ensure(*codes: str) -> typing.ContextManager:
     '''
@@ -19,7 +18,6 @@ def ensure(*codes: str) -> typing.ContextManager:
                 print('\x1b8\x1b[J' + cleanup, end = '')
         
         return wrapper
-    
     return decorator
 
 # EOF
