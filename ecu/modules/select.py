@@ -2,6 +2,8 @@ import typing
 import readchar
 from .. import utils
 
+__max = max
+
 @utils.ensure('?25h', '0m')
 def select(
     prompt: str,
@@ -51,7 +53,7 @@ def select(
             i = scroll + choice_index
             print(f'\x1b[?25l\x1b[0m\x1b[2K{"-+"[i in sel]}\x1b[{hover if i == row else 0}m {choice}\x1b[0m')
         
-        print(f'\x1b[{size}A', end = '')
+        print(f'Showing {len(choices)} items.\x1b[{size}A\x1b[0G', end = '', flush = True)
         key = readchar.readkey()
 
         # Move cursor up
@@ -71,7 +73,7 @@ def select(
         # Go to bottom
         if key == readchar.key.END:
             row = len(choices) - 1
-            scroll = row // size
+            scroll = __max(0, len(choices) - size)
         
         # Toggle line
         if key in (readchar.key.SPACE, 's') and max != 1:
@@ -79,7 +81,7 @@ def select(
             last_toggle = row
         
         # Toggle all lines
-        if key == 'a':
+        if key in 'aA':
             for i in range(len(choices)):
                 toggle(i)
         
