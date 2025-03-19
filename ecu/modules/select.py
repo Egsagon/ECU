@@ -62,11 +62,11 @@ def select(
         
         # Show bottom text
         raw_message = utils.inline(f'#{row} | {len(sel)}/{len(choices)} selected' + message)
-        print(f'\x1b[2m{raw_message}\x1b[0m\x1b[{size}A\x1b[0G', end = '', flush = True)
+        print(f'\x1b[2m\x1b[2K{raw_message}\x1b[0m\x1b[{size}A\x1b[0G', end = '', flush = True)
         key = readchar.readkey()
 
         # Reset message
-        message = '' # BUG
+        message = ''
 
         # Move cursor up
         if key == readchar.key.UP:
