@@ -1,3 +1,4 @@
+import os
 import typing
 
 def ensure(*codes: str) -> typing.ContextManager:
@@ -19,5 +20,18 @@ def ensure(*codes: str) -> typing.ContextManager:
         
         return wrapper
     return decorator
+
+def inline(value: str, buffer: int = 0) -> str:
+    '''
+    ...
+    '''
+
+    raw = str(value)
+    size = os.get_terminal_size().columns - buffer
+
+    if len(raw) > size:
+        raw = raw[:size - 1] + '…'
+    
+    return raw
 
 # EOF

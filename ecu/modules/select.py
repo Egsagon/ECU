@@ -4,6 +4,8 @@ from .. import utils
 
 __max = max
 
+PINS = ('\x1b[2m-\x1b[0m', '+')
+
 @utils.ensure('?25h', '0m')
 def select(
     prompt: str,
@@ -17,11 +19,12 @@ def select(
 
     Bindings:
         - up/down: Move cursor
-        - space/s: toggle line selection
+        - space: toggle line selection
         - home/end: Go to start/end of list
         - a: Toggle all items
-        - shift+s: Toggle from last selection to cursor
         - r: Reset selection
+        - s: Start range selection
+        - shift+s: End range selection
         - enter: Confirm selection
     
     :param prompt: Prompt to display before the menu.
@@ -38,7 +41,8 @@ def select(
     sel: list[int] = []
     choices = list(choices) # Convenient for passing iterator directly
     size = size or len(choices)
-    last_toggle = -1
+    range_start = 0
+    message = ''
 
     print(prompt)
 
@@ -51,10 +55,18 @@ def select(
     while 1:
         for choice_index, choice in enumerate(choices[scroll:scroll + size]):
             i = scroll + choice_index
-            print(f'\x1b[?25l\x1b[0m\x1b[2K{"-+"[i in sel]}\x1b[{hover if i == row else 0}m {choice}\x1b[0m')
+            print('\x1b[?25l\x1b[0m\x1b[2K'
+                  f'{PINS[i in sel]} \x1b[{hover if i == row else 0}m'
+                  f'{utils.inline(choice, buffer = 1)}\x1b[0m'
+            )
         
-        print(f'Showing {len(choices)} items.\x1b[{size}A\x1b[0G', end = '', flush = True)
+        # Show bottom text
+        raw_message = utils.inline(f'#{row} | {len(sel)}/{len(choices)} selected' + message)
+        print(f'\x1b[2m{raw_message}\x1b[0m\x1b[{size}A\x1b[0G', end = '', flush = True)
         key = readchar.readkey()
+
+        # Reset message
+        message = '' # BUG
 
         # Move cursor up
         if key == readchar.key.UP:
@@ -76,7 +88,7 @@ def select(
             scroll = __max(0, len(choices) - size)
         
         # Toggle line
-        if key in (readchar.key.SPACE, 's') and max != 1:
+        if key == readchar.key.SPACE and max != 1:
             toggle(row)
             last_toggle = row
         
@@ -84,20 +96,25 @@ def select(
         if key in 'aA':
             for i in range(len(choices)):
                 toggle(i)
+            message = ' | Toggled all lines'
         
-        # Select plage
+        # Set range start
+        if key == 's':
+            range_start = row
+            message = f' | Started range at row {row}'
+        
+        # Select range
         if key == 'S':
-            s, e = sorted((last_toggle, row))
-            if last_toggle >= row:
-                s, e = s - 1, e - 1
-            
-            for i in range(s, e):
+            start, end = sorted((range_start, row))
+            for i in range(start - 1, end):
                 toggle(i + 1)
+            message = f' | Applied selection {start}-{end}'
         
         # Reset selection
         if key in 'rR':
             sel = []
             last_toggle = -1
+            message = ' | Selection reset'
         
         # Confirm or direct select
         if key == readchar.key.ENTER:
