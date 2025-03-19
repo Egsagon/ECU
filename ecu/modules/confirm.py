@@ -7,7 +7,6 @@ def confirm(
     confirm: str = 'Yes',
     refute: str = 'No',
     default: bool = True,
-    throw: bool = True,
     hover: int | str = 106
 ) -> bool:
     '''
@@ -16,7 +15,6 @@ def confirm(
     :param prompt: Prompt message.
     :param confirm: Confirmation button content.
     :param refute: Refute button content.
-    :param throw: Whether to raise an error if confirm fails.
     
     :return: The confirmation result.
     '''
@@ -40,9 +38,6 @@ def confirm(
         if key == readchar.key.ENTER: break
     
     print()
-    if throw and not result:
-        raise InterruptedError('Confirmation failed')
-    
     return result
 
 # EOF
