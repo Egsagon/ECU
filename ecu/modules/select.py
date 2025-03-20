@@ -6,7 +6,7 @@ __max = max
 
 PINS = ('\x1b[2m-\x1b[0m', '+')
 
-@utils.ensure('?25h', '0m')
+@utils.ensure('?25h', '0m', '=7h')
 def select(
     prompt: str,
     choices: typing.Iterable,
@@ -40,7 +40,7 @@ def select(
     scroll = 0
     sel: list[int] = []
     choices = list(choices) # Convenient for passing iterator directly
-    size = size or len(choices)
+    size = size if size else len(choices)
     range_start = 0
     message = ''
 
@@ -57,12 +57,12 @@ def select(
             i = scroll + choice_index
             print('\x1b[?25l\x1b[0m\x1b[2K'
                   f'{PINS[i in sel]} \x1b[{hover if i == row else 0}m'
-                  f'{utils.inline(choice, buffer = 1)}\x1b[0m'
+                  f'{utils.inline(choice, buffer = 2)}\x1b[0m'
             )
         
         # Show bottom text
         raw_message = utils.inline(f'#{row} | {len(sel)}/{len(choices)} selected' + message)
-        print(f'\x1b[2m\x1b[2K{raw_message}\x1b[0m\x1b[{size}A\x1b[0G', end = '', flush = True)
+        print(f'\x1b[2m\x1b[2K{raw_message}\x1b[0m\x1b[{min(size, len(choices))}A\x1b[0G', end = '', flush = True)
         key = readchar.readkey()
 
         # Reset message
@@ -113,7 +113,7 @@ def select(
         # Reset selection
         if key in 'rR':
             sel = []
-            last_toggle = -1
+            range_start = 0
             message = ' | Selection reset'
         
         # Confirm or direct select

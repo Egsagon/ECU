@@ -23,7 +23,7 @@ def ensure(*codes: str) -> typing.ContextManager:
 
 def inline(value: str, buffer: int = 0) -> str:
     '''
-    ...
+    prevents printing from causing carriage return.
     '''
 
     raw = str(value)
