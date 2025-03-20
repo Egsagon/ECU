@@ -30,7 +30,7 @@ def inline(value: str, buffer: int = 0) -> str:
     size = os.get_terminal_size().columns - buffer
 
     if len(raw) > size:
-        raw = raw[:size - 1] + '…'
+        raw = raw[:max(0, size - 1)] + '…'
     
     return raw
 

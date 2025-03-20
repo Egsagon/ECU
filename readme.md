@@ -1,21 +1,41 @@
 # ECU
 
-A simple CLI helper tool.
+A simple and minimalist CLI helper tool.
+
+## Installation
+
+Package is available on PyPI.
+```
+pip install ecu
+```
 
 ## Usage
 
+Import the library in your project, and use the provided
+functions as you want.
 ```py
 import ecu
+```
 
-# Selection
-ecu.select('Choose a fruit', ['tomato', 'banana', 'peach'])
+#### Header display
+```py
+ecu.frame('Hello, world', 'Have some text')
+```
 
-# Confirmation
+#### Selection input
+```py
+ecu.select('Choose a fruit', ['Banana', 'Carrot', 'Kiwi'])
+```
+
+#### Confirm input
+```py
 ecu.confirm('Do you really want to do this?')
+```
 
-# Spinner for long tasks
-with ecu.spin():
-    ...
+#### Spinner display
+
+```py
+with ecu.spin()
 ```
 
 ## License

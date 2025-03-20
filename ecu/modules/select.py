@@ -6,7 +6,7 @@ __max = max
 
 PINS = ('\x1b[2m-\x1b[0m', '+')
 
-@utils.ensure('?25h', '0m', '=7h')
+@utils.ensure('?25h', '0m')
 def select(
     prompt: str,
     choices: typing.Iterable,
