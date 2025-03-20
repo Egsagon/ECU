@@ -1,18 +1,16 @@
 # ECU
+*A simple and minimalist CLI helper tool.*
 
-A simple and minimalist CLI helper tool.
+This package was designed to help building CLI tools in python that will look more elegant than the built-in `print()` and `input()`, while not being overcomplicated.
 
 ## Installation
-
 Package is available on PyPI.
 ```
 pip install ecu
 ```
 
 ## Usage
-
-Import the library in your project, and use the provided
-functions as you want.
+Import the library in your project, and use the provided functions as you want.
 ```py
 import ecu
 ```
@@ -44,5 +42,4 @@ with ecu.spin():
 ![](.github/images/demo4.png)
 
 ## License
-
 Licensed under MIT. See `LICENSE`.
